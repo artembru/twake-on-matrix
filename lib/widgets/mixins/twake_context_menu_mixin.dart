@@ -1,4 +1,3 @@
-import 'package:fluffychat/pages/chat/events/message/message_content_with_timestamp_builder.dart';
 import 'package:fluffychat/widgets/context_menu/context_menu_action.dart';
 import 'package:fluffychat/widgets/context_menu/twake_context_menu.dart';
 import 'package:fluffychat/widgets/mixins/twake_context_menu_style.dart';
@@ -18,7 +17,7 @@ mixin TwakeContextMenuMixin {
     int? result;
     await showDialog<int>(
       context: context,
-      barrierColor: Colors.yellow,
+      barrierColor: Colors.transparent,
       barrierDismissible: false,
       builder: (dialogContext) => TwakeContextMenu(
         dialogContext: dialogContext,

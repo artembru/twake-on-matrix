@@ -305,7 +305,10 @@ class PinnedMessagesController extends State<PinnedMessages>
   }
 
   List<Widget> pinnedMessagesActionsList(
-      BuildContext context, List<ChatContextMenuActions> actions, Event event) {
+    BuildContext context,
+    List<ChatContextMenuActions> actions,
+    Event event,
+  ) {
     return actions.map((action) {
       return popupItemByTwakeAppRouter(
         context,
