@@ -15,6 +15,7 @@ typedef ContextMenuBuilder = List<Widget> Function(BuildContext context);
 
 class TwakeContextMenuArea extends StatelessWidget with TwakeContextMenuMixin {
   final List<ContextMenuAction> listActions;
+
   /// The widget displayed inside the [TwakeContextMenuArea]
   final Widget child;
 
