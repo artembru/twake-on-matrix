@@ -37,6 +37,7 @@ prime
 .pub-cache/
 .pub/
 /build/
+**/*.mocks.dart
 
 # Web related
 docs/build/
