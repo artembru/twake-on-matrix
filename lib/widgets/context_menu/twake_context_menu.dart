@@ -136,7 +136,7 @@ class TwakeContextMenuState extends State<TwakeContextMenu>
                                         child: action,
                                         closeMenuAction: () {
                                           closeContextMenu(
-                                            indexOfAction: widget.listActions
+                                            popResult: widget.listActions
                                                 .indexOf(action),
                                           );
                                         },
@@ -164,9 +164,9 @@ class TwakeContextMenuState extends State<TwakeContextMenu>
     );
   }
 
-  void closeContextMenu({int? indexOfAction}) {
+  void closeContextMenu({dynamic popResult}) {
     _animationController.reverse().whenComplete(() {
-      Navigator.of(widget.dialogContext).pop<int>(indexOfAction);
+      Navigator.of(widget.dialogContext).pop<dynamic>(popResult);
     });
   }
 

@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 
 /// Show a [TwakeContextMenu] on the given [BuildContext]. For other parameters, see [TwakeContextMenu].
 mixin TwakeContextMenuMixin {
-  Future<int?> showTwakeContextMenu({
+  Future<dynamic> showTwakeContextMenu({
     required List<ContextMenuAction> listActions,
     required Offset offset,
     required BuildContext context,
     double? verticalPadding,
     VoidCallback? onClose,
   }) async {
-    int? result;
-    await showDialog<int>(
+    dynamic result;
+    await showDialog(
       context: context,
       barrierColor: Colors.transparent,
       barrierDismissible: false,

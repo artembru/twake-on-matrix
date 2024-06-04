@@ -426,7 +426,7 @@ class PinnedMessagesController extends State<PinnedMessages>
       listActions: listActions,
       onClose: _handleStateContextMenu,
     );
-    if (selectedActionIndex != null) {
+    if (selectedActionIndex != null && selectedActionIndex is int) {
       _handleClickOnContextMenuItem(
         getPinnedMessagesActionsList(event)[selectedActionIndex],
         event,
