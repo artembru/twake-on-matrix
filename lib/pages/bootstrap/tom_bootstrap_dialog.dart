@@ -67,12 +67,16 @@ class TomBootstrapDialogState extends State<TomBootstrapDialog>
   }
 
   Future<RecoveryWords?> _getRecoveryWords() async {
-    return await _getRecoveryWordsInteractor.execute().then(
-          (either) => either.fold(
-            (failure) => null,
-            (success) => success.words,
-          ),
-        );
+    try {
+      return await _getRecoveryWordsInteractor.execute().then(
+            (either) => either.fold(
+              (failure) => null,
+              (success) => success.words,
+            ),
+          );
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<void> _loadingData() async {
@@ -91,40 +95,48 @@ class TomBootstrapDialogState extends State<TomBootstrapDialog>
   }
 
   Future<void> _getRecoveryKeyState() async {
-    await widget.client.onSync.stream.first;
-    await widget.client.initCompleter?.future;
+    try {
+      await widget.client.onSync.stream.first;
+      await widget.client.initCompleter?.future;
 
-    // Display first login bootstrap if enabled
-    if (widget.client.encryption?.keyManager.enabled == true) {
-      Logs().d(
-        'TomBootstrapDialog::_initializeRecoveryKeyState: Showing bootstrap dialog when encryption is enabled',
-      );
-      if (await widget.client.encryption?.keyManager.isCached() == false ||
-          await widget.client.encryption?.crossSigning.isCached() == false ||
-          widget.client.isUnknownSession && mounted) {
+      // Display first login bootstrap if enabled
+      if (widget.client.encryption?.keyManager.enabled == true) {
+        Logs().d(
+          'TomBootstrapDialog::_initializeRecoveryKeyState: Showing bootstrap dialog when encryption is enabled',
+        );
+        if (await widget.client.encryption?.keyManager.isCached() == false ||
+            await widget.client.encryption?.crossSigning.isCached() == false ||
+            widget.client.isUnknownSession && mounted) {
+          final recoveryWords = await _getRecoveryWords();
+          if (recoveryWords != null) {
+            _recoveryWords = recoveryWords;
+            _uploadRecoveryKeyState = UploadRecoveryKeyState.useExisting;
+          } else {
+            Logs().d(
+              'TomBootstrapDialog::_initializeRecoveryKeyState(): no recovery existed then call bootstrap',
+            );
+            Navigator.pop(context);
+            await BootstrapDialog(client: widget.client).show();
+          }
+        }
+      } else {
+        Logs().d(
+          'TomBootstrapDialog::_initializeRecoveryKeyState(): encryption is not enabled',
+        );
         final recoveryWords = await _getRecoveryWords();
+        _wipe = recoveryWords != null;
         if (recoveryWords != null) {
-          _recoveryWords = recoveryWords;
-          _uploadRecoveryKeyState = UploadRecoveryKeyState.useExisting;
+          _uploadRecoveryKeyState = UploadRecoveryKeyState.wipeRecovery;
         } else {
-          Logs().d(
-            'TomBootstrapDialog::_initializeRecoveryKeyState(): no recovery existed then call bootstrap',
-          );
-          Navigator.pop(context);
-          await BootstrapDialog(client: widget.client).show();
+          _uploadRecoveryKeyState = UploadRecoveryKeyState.initial;
         }
       }
-    } else {
-      Logs().d(
-        'TomBootstrapDialog::_initializeRecoveryKeyState(): encryption is not enabled',
+    } catch (e) {
+      Logs().e(
+        'TomBootstrapDialog::_initializeRecoveryKeyState(): $e',
       );
-      final recoveryWords = await _getRecoveryWords();
-      _wipe = recoveryWords != null;
-      if (recoveryWords != null) {
-        _uploadRecoveryKeyState = UploadRecoveryKeyState.wipeRecovery;
-      } else {
-        _uploadRecoveryKeyState = UploadRecoveryKeyState.initial;
-      }
+      Navigator.pop(context);
+      await BootstrapDialog(client: widget.client).show();
     }
 
     setState(() {});
