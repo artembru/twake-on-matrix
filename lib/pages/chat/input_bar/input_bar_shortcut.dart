@@ -16,13 +16,16 @@ class InputBarShortcuts extends StatelessWidget {
 
   final FocusSuggestionController? focusSuggestionController;
 
+  final ScrollController scrollController;
+
   InputBarShortcuts({
     super.key,
-    required this.child,
+    required this.scrollController,
     this.room,
     this.controller,
     this.onEnter,
     this.focusSuggestionController,
+    required this.child,
   });
 
   final _debouncer = OneTimeDebouncer(milliseconds: 50);
@@ -37,6 +40,10 @@ class InputBarShortcuts extends StatelessWidget {
         ): () {
           _debouncer.run(() {
             controller?.addNewLine();
+            _debouncer.run(() {
+              scrollController
+                  .jumpTo(scrollController.position.maxScrollExtent);
+            });
           });
         },
         const SingleActivator(
