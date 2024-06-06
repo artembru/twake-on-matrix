@@ -17,14 +17,14 @@ const double _kMinTileHeight = 24;
 /// If you just want to use a normal [TwakeContextMenu], please use [TwakeContextMenuArea].
 
 class TwakeContextMenu extends StatefulWidget {
+  /// The [BuildContext] of the dialog/modal that will display the [TwakeContextMenu]. This is used to close the dialog/modal when the [TwakeContextMenu] is closed.
   final BuildContext dialogContext;
+
+  /// The list of items to be displayed in the [TwakeContextMenu]. This is used to build the UI of items
   final List<ContextMenuAction> listActions;
 
   /// The [Offset] from coordinate origin the [TwakeContextMenu] will be displayed at.
   final Offset position;
-
-  /// The builder for the items to be displayed. [ListTile] is very useful in most cases.
-  // final ContextMenuBuilder builder;
 
   /// The padding value at the top an bottom between the edge of the [TwakeContextMenu] and the first / last item
   final double? verticalPadding;
