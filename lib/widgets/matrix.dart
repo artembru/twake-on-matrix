@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:fluffychat/domain/contact_manager/contacts_manager.dart';
 import 'package:fluffychat/presentation/mixins/init_config_mixin.dart';
 import 'package:universal_html/html.dart' as html hide File;
 
@@ -76,6 +77,8 @@ class Matrix extends StatefulWidget {
 class MatrixState extends State<Matrix>
     with WidgetsBindingObserver, ReceiveSharingIntentMixin, InitConfigMixin {
   final tomConfigurationRepository = getIt.get<ToMConfigurationsRepository>();
+
+  final _contactsManager = getIt.get<ContactsManager>();
 
   int _activeClient = -1;
   String? activeBundle;
@@ -443,6 +446,7 @@ class MatrixState extends State<Matrix>
     if (activeClient == null) return;
     await setUpToMServicesInLogin(activeClient);
     final result = await setActiveClient(activeClient);
+    matrixState.reSyncContacts();
     if (result.isSuccess) {
       TwakeApp.router.go(
         '/rooms',
@@ -797,6 +801,10 @@ class MatrixState extends State<Matrix>
       TwakeApp.router.go('/home', extra: true);
     }
     await _deleteAllTomConfigurations();
+  }
+
+  Future<void> reSyncContacts() async {
+    _contactsManager.reSyncContacts();
   }
 
   @override
