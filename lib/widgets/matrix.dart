@@ -630,6 +630,9 @@ class MatrixState extends State<Matrix>
 
   void setUpAuthorization(Client client) {
     final authorizationInterceptor = getIt.get<AuthorizationInterceptor>();
+    Logs().d(
+      'MatrixState::setUpAuthorization: accessToken ${client.accessToken}',
+    );
     authorizationInterceptor.accessToken = client.accessToken;
   }
 
@@ -695,8 +698,9 @@ class MatrixState extends State<Matrix>
       'Matrix::_checkHomeserverExists: Old twakeSupported - $twakeSupported',
     );
     if (client == null && client?.userID == null) return;
+    setUpAuthorization(client!);
     try {
-      final toMConfigurations = await getTomConfigurations(client!.userID!);
+      final toMConfigurations = await getTomConfigurations(client.userID!);
       Logs().d(
         'Matrix::_checkHomeserverExists: toMConfigurations - $toMConfigurations',
       );
